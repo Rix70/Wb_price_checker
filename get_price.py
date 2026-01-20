@@ -6,7 +6,7 @@ from get_token import get_token
 from get_price_with_wb_wallet import calc_price_with_wb_wallet
 import sys
 
-logger.add(level="INFO", sink=sys.stdout)  # Указываем вывод в stdout для отображения уровня INFO
+
 HEADERS = {
     "accept": "*/*",
     "accept-language": "ru-RU,ru;q=0.9",
@@ -127,10 +127,30 @@ class WbPrice:
 
         return results
 
-if __name__ == "__main__":
-    input_list = [294493176,
-    ]
+def add_sku_from_terminal():
+    if len(sys.argv) < 2:
+        logger.error("Не указан SKU. Используйте: python get_price.py sku=<значение>")
+        return
 
-    wb_price = WbPrice(goods=input_list)
-    results = wb_price.parse_prices()
-    logger.success(results)
+    arg = sys.argv[1]
+    if not arg.startswith("sku="):
+        logger.error("Неверный формат аргумента. Используйте: python get_price.py sku=<значение>")
+        return
+
+    try:
+        sku = int(arg.split("=", 1)[1])
+        wb_price = WbPrice(goods=[sku])
+        results = wb_price.parse_prices()
+        logger.success(results)
+    except ValueError:
+        logger.error("SKU должен быть числом.")
+
+if __name__ == "__main__":
+    
+    if len(sys.argv) > 1:
+        add_sku_from_terminal()
+    else:
+        input_list = [294493176]
+        wb_price = WbPrice(goods=input_list)
+        results = wb_price.parse_prices()
+        logger.success(results)

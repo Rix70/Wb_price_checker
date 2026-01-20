@@ -100,7 +100,7 @@ def get_discount_settings() -> tuple[Decimal, Decimal]:
     return max_price, min_delta
 
 
-def calc_price_with_wb_wallet(price: int | float | Decimal) -> int:
+def calc_price_with_wb_wallet(price) -> int:
     logger.info("WB Wallet: старт расчёта цены с WB-кошельком")
     logger.info("WB Wallet: исходная цена → {}₽", price)
 
